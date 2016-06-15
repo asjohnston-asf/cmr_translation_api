@@ -15,17 +15,18 @@ def granule(request):
         response['Content-Disposition'] = 'attachment; filename="results.csv"'
         template = loader.get_template('search/csv.template')
         response.write(template.render({'results': results}))
-        return response
 
     elif output_format == 'METALINK':
         response = HttpResponse(content_type='text/xml')
         response['Content-Disposition'] = 'attachment; filename="results.metalink"'
         template = loader.get_template('search/metalink.template')
         response.write(template.render({'results': results}))
-        return response
 
     elif output_format == 'XML':
-       return HttpResponse(xml_response, content_type='text/xml')
+       response = HttpResponse(xml_response, content_type='text/xml')
 
-    return JsonResponse(results, safe=False)
+    else:
+        response = JsonResponse(results, safe=False)
+
+    return response
 
