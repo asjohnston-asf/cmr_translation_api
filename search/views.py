@@ -16,5 +16,7 @@ def granule(request):
             row = [result[key] for key in result]
             writer.writerow(row)
         return response
+    elif request.GET.get('output', '') == 'XML':
+        return HttpResponse(xml_response, content_type='text/xml')
     return JsonResponse(results, safe=False)
 
