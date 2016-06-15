@@ -1,3 +1,20 @@
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from cmr import build_cmr_parms, send_cmr_request, parse_xml_response
+import json
+import csv
 
-# Create your views here.
+
+def granule(request):
+    cmr_parms = build_cmr_parms(request.GET)
+    xml_response = send_cmr_request(cmr_parms)
+    results = parse_xml_response(xml_response)
+    if request.GET.get('output', '') == 'CSV':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+        writer = csv.writer(response)
+        for result in results:
+            row = [result[key] for key in result]
+            writer.writerow(row)
+        return response
+    return JsonResponse(results, safe=False)
+
