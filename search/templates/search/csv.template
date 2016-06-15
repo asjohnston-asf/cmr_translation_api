@@ -1,0 +1,3 @@
+granuleName,downloadUrl
+{% for row in data %}{{ row.granuleName}},{{ row.downloadUrl }}
+{% endfor %}

@@ -35,24 +35,46 @@ def send_cmr_request(parms):
     xml_response = response.read()
     return xml_response
 
+
+def attr(name):
+    return "./AdditionalAttributes/AdditionalAttribute/[Name='" + name + "']/Values/Value"
+
 def parse_xml_response(xml):
     root = ET.fromstring(xml)
     results = []
     for result in root.iter('result'):
         for granule in result.iter('Granule'):
             results.append({
-                'platform': granule.findtext("./AdditionalAttributes/AdditionalAttribute/[Name='ASF_PLATFORM']/Values/Value"),
+                'platform': granule.findtext(attr('ASF_PLATFORM')),
+                'md5': granule.findtext(attr('MD5SUM')),
+                'beamMode': granule.findtext(attr('BEAM_MODE_TYPE')),
+                'beamModeDescription': granule.findtext(attr('BEAM_MODE_DESC')),
                 'granuleName': granule.findtext("./DataGranule/ProducerGranuleId"),
-                'granuleType':  granule.findtext("./AdditionalAttributes/AdditionalAttribute/[Name='GRANULE_TYPE']/Values/Value"),
-                'catSceneId': None,
+                'sizeMB': granule.findtext("./DataGranule/SizeMBDataGranule"),
+                'bytes': granule.findtext(attr("BYTES")),
+                'fileName': granule.findtext("./OnlineAccessURLs/OnlineAccessURL/URL").split('/')[-1],
+                'granuleType':  granule.findtext(attr('GRANULE_TYPE')),
                 'sceneId': granule.findtext("./DataGranule/ProducerGranuleId"),
                 'absoluteOrbit': granule.findtext("./OrbitCalculatedSpatialDomains/OrbitCalculatedSpatialDomain/OrbitNumber"),
-                'track': None,
-                'sceneDate': granule.findtext("./AdditionalAttributes/AdditionalAttribute/[Name='ACQUISITION_DATE']/Values/Value"),
-                'flightDirection': granule.findtext("./AdditionalAttributes/AdditionalAttribute/[Name='ASCENDING_DESCENDING']/Values/Value"),
-                'thumbnailUrl': granule.findtext("./AdditionalAttributes/AdditionalAttribute/[Name='THUMBNAIL_URL']/Values/Value"),
-                'firstFrame': '',
-                'finalFrame': '',
+                'sceneDate': granule.findtext(attr('ACQUISITION_DATE')),
+                'flightDirection': granule.findtext(attr('ASCENDING_DESCENDING')),
+                'thumbnailUrl': granule.findtext(attr('THUMBNAIL_URL')),
+                'farEndLat':  granule.findtext(attr('FAR_END_LAT')),
+                'farStartLat':  granule.findtext(attr('FAR_START_LAT')),
+                'nearStartLat':  granule.findtext(attr('NEAR_START_LAT')),
+                'nearEndLat':  granule.findtext(attr('NEAR_END_LAT')),
+                'farEndLon':  granule.findtext(attr('FAR_END_LON')),
+                'farStartLon':  granule.findtext(attr('FAR_START_LON')),
+                'nearStartLon':  granule.findtext(attr('NEAR_START_LON')),
+                'nearEndLon':  granule.findtext(attr('NEAR_END_LON')),
+                'processingType':  granule.findtext(attr('PROCESSING_TYPE')),
+                'finalFrame':  granule.findtext(attr('FRAME_NUMBER')),
+                'startTime':  granule.findtext("./Temporal/RangeDateTime/BeginningDateTime"),
+                'endTime':  granule.findtext("./Temporal/RangeDateTime/EndingDateTime"),
+                'centerLat':  granule.findtext(attr('CENTER_LAT')),
+                'centerLon':  granule.findtext(attr('CENTER_LON')),
+                'polarization':  granule.findtext(attr('POLARIZATION')),
+                'browseUrl': granule.findtext("./AssociatedBrowseImageUrls/ProviderBrowseUrl/URL"),
                 'downloadUrl': granule.findtext("./OnlineAccessURLs/OnlineAccessURL/URL")
             })
     return results

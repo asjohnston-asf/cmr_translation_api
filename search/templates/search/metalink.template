@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<metalink xmlns="http://www.metalinker.org/" version="3.0">
+    <publisher><name>Alaska Satellite Facility</name><url>http://www.asf.alaska.edu/</url></publisher>
+    <files>
+        {% for row in data %}<file name="{{ row.fileName }}"><resources><url type="http">{{ row.downloadUrl }}</url></resources><verification><hash type="md5"/>{{ row.md5 }}</verification><size>{{ row.bytes }}</size></file>
+        {% endfor %}
+    </files>
+</metalink>
