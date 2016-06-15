@@ -5,6 +5,7 @@ import xml.etree.cElementTree as ET
 
 def build_cmr_parms(asf_parms):
     cmr_parms = {}
+    #cmr_parms['options[attribute][or]'] = 'true'
     cmr_parms['attribute[]'] = []
 
     cmr_parms['provider'] = 'ASF'
@@ -14,6 +15,10 @@ def build_cmr_parms(asf_parms):
     if 'platform' in asf_parms:
         for plat in asf_parms['platform'].split(','):
             cmr_parms['attribute[]'].append('string,ASF_PLATFORM,' + plat)
+
+    if 'processingLevel' in asf_parms:
+        for level in asf_parms['processingLevel'].split(','):
+            cmr_parms['attribute[]'].append('string,PROCESSING_TYPE,' + level)
 
     if 'granule_list' in asf_parms:
        cmr_parms['readable_granule_name'] = asf_parms['granule_list'].split(',')
