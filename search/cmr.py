@@ -5,7 +5,7 @@ import xml.etree.cElementTree as ET
 
 def build_cmr_parms(asf_parms):
     cmr_parms = {}
-    #cmr_parms['options[attribute][or]'] = 'true'
+    cmr_parms['options[attribute][or]'] = 'true'
     cmr_parms['attribute[]'] = []
 
     cmr_parms['provider'] = 'ASF'
@@ -13,8 +13,7 @@ def build_cmr_parms(asf_parms):
     cmr_parms['page_size'] = asf_parms.get('maxResults', 2000)
 
     if 'platform' in asf_parms:
-        for plat in asf_parms['platform'].split(','):
-            cmr_parms['attribute[]'].append('string,ASF_PLATFORM,' + plat)
+        cmr_parms['platform[]'] = asf_parms['platform'].split(',')
 
     if 'processingLevel' in asf_parms:
         for level in asf_parms['processingLevel'].split(','):
@@ -29,12 +28,14 @@ def build_cmr_parms(asf_parms):
     if 'polygon' in asf_parms:
         cmr_parms['polygon'] = asf_parms['polygon']
 
+    print str(cmr_parms)
     return cmr_parms
 
 
 def send_cmr_request(parms):
     url = 'https://cmr.earthdata.nasa.gov/search/granules.echo10'
     url_values = urllib.urlencode(parms, doseq=True)
+    print str(url_values)
     req = urllib2.Request(url, url_values)
     response = urllib2.urlopen(req)
     xml_response = response.read()
