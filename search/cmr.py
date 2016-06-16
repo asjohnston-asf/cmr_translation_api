@@ -13,7 +13,7 @@ def build_cmr_parms(asf_parms):
     cmr_parms['page_size'] = asf_parms.get('maxResults', 2000)
 
     if 'platform' in asf_parms:
-        cmr_parms['platform[]'] = asf_parms['platform'].split(',')
+        cmr_parms['platform'] = asf_parms['platform'].split(',')
 
     if 'processingLevel' in asf_parms:
         for level in asf_parms['processingLevel'].split(','):
