@@ -1,12 +1,12 @@
 from django.http import JsonResponse, HttpResponse
 from django.template import loader
-from cmr import build_cmr_parms, send_cmr_request, parse_xml_response
+from cmr import build_cmr_parms, send_cmr_request, parse_cmr_xml_response
 
 
 def granule(request):
     cmr_parms = build_cmr_parms(request.GET)
     xml_response = send_cmr_request(cmr_parms)
-    results = parse_xml_response(xml_response)
+    results = parse_cmr_xml_response(xml_response)
 
     output_format = request.GET.get('output', '').upper()
 
